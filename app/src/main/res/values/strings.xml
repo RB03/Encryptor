@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Encryptor</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+
+    <string name="file_picker_app_name">MaterialFilePicker</string>
+    <string name="empty_directory_hint">Empty directory</string>
+    <string name="start_path_name">Device</string>
+    <string name="type_archive">Archive</string>
+    <string name="type_certificate">Certificate</string>
+    <string name="type_directory">Directory</string>
+    <string name="type_document">Document</string>
+    <string name="type_drawing">Picture</string>
+    <string name="type_excel">Spreadsheet</string>
+    <string name="type_image">Image</string>
+    <string name="type_encrypted">ENCRYPTED</string>
+
+    <string name="type_music">Music</string>
+    <string name="type_pdf">PDF document</string>
+    <string name="type_power_point">Presentation</string>
+    <string name="type_word">Document</string>
+
+    <string-array name="spinner_mode_array">
+        <item>Encrypt Files</item>
+        <item>Decrypt Files</item>
+    </string-array>
+    <string-array name="spinner_keylength_array">
+        <item>AES 128</item>
+        <item>AES 256</item>
+    </string-array>
+    <string name="title_activity_temp">temp</string>
+    <string name="enter_passphrase">Enter a passphrase</string>
+    <string name="delete_source">Delete source file</string>
+    <string name="select_files_to_enc_dec">Select files to encrypt or decrypt</string>
+    <string name="passphrase_caps">PASSPHRASE</string>
+    <string name="no_file_selected">0 Files Selected..</string>
+    <string name="go">GO</string>
+    <string name="pick_files">Pick Files</string>
+
+</resources>

@@ -1,0 +1,56 @@
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cv_dec"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:longClickable="true"
+    >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:id="@+id/card_view_card"
+            android:paddingLeft="6dp"
+            android:paddingTop="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_height="48dp"
+                android:layout_width="48dp"
+                android:src="@drawable/ic_file_gray_116dp"
+                android:id="@+id/fileicon"
+                android:alpha="0.9"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/filename_dec"
+                android:paddingRight="30dp"
+                android:layout_toRightOf="@id/fileicon"
+                android:layout_centerVertical="true"
+                android:textSize="22sp"
+                android:text="Tithgghhghhsggghghghgllllllllle"
+                android:singleLine="true"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/lock_icon_dec"
+                android:src="@drawable/ic_lock_outline_24dp"
+                android:alpha="0.7"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                />
+
+        </RelativeLayout>
+</android.support.v7.widget.CardView>
+
