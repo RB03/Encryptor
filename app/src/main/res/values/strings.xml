@@ -39,5 +39,7 @@
     <string name="no_file_selected">0 Files Selected..</string>
     <string name="go">GO</string>
     <string name="pick_files">Pick Files</string>
+    <string name="delete">Delete</string>
+    <string name="share">Share</string>
 
 </resources>

@@ -1,11 +1,12 @@
 package com.burman.rohit.encryptor;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +17,6 @@ import com.burman.rohit.encryptor.utils.ViewProvider;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -25,14 +25,14 @@ import java.util.Collections;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
     private static final String TAG = "RV_ADAPTER";
+    private static ActionMode mActionMode;
+    public ViewHolderClicks viewHolderClicks;
     private ArrayList<File> mFiles;
     private ArrayList<String> paths;
-
     private ModeHandler mModeHandler;
     private FileHandler mFileHandler;
     private ViewHolder viewHolder;
     private View v;
-    public  ViewHolderClicks viewHolderClicks;
 
     public RVAdapter(ArrayList<File> titles, ModeHandler modeHandler) {
          Collections.sort(titles);
@@ -58,13 +58,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_dec, parent,
                     false);
         }
-//        v.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e(TAG, " clicked");
-//            }
-//        });
-
         viewHolder = new ViewHolder(v,mModeHandler, viewHolderClicks);
         return viewHolder;
     }
@@ -83,13 +76,60 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
         return mFiles.size();
     }
 
+    public void clickListener(ViewHolderClicks viewHolderClicks) {
+        this.viewHolderClicks = viewHolderClicks;
+    }
 
+    public String getFilePath(int position) {
+        return mFiles.get(position).getPath();
+    }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public void removeItem(int position) {
+        mFiles.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mFiles.size());
+    }
+
+    public void removeItem(File file) {
+        int position = mFiles.indexOf(file);
+        mFiles.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mFiles.size());
+    }
+
+    public void addItem(File file) {
+        mFiles.add(0, file);
+        notifyItemInserted(0);
+        notifyItemRangeChanged(0, mFiles.size());
+
+    }
+
+    public void updateDataSet() {
+        if (ContextActionMode.isAlive) ContextActionMode.kill();
+
+        mFiles = mFileHandler.getFiles(FileHandler.getDirectory(mModeHandler.getMODE()));
+        Collections.sort(mFiles);
+        notifyDataSetChanged();
+        notifyItemRangeChanged(0, getItemCount());
+
+        //TODO update checklist
+        //Temporary fix
+    }
+
+    public interface ViewHolderClicks {
+        void onItemClicked(View v, int position);
+
+        void onItemLongClicked(View v, int adapterPosition);
+
+        void itemChecked(View v, int position, boolean isChecked);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, CompoundButton.OnCheckedChangeListener {
         private static final String TAG = "VIEW_HOLDER";
         private TextView filename;
         private ImageView imageView;
         private ImageView mFileImage;
+        private CheckBox checkBox;
         private ViewHolderClicks viewClicks;
 
         public ViewHolder(View itemView, ModeHandler mModeHandler, ViewHolderClicks
@@ -97,8 +137,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
             super(itemView);
             viewClicks=viewHolderClicks;
             try {
-              mFileImage = (ImageView) itemView.findViewById(R.id.fileicon);
-             }catch (NullPointerException shit){
+                mFileImage = (ImageView) itemView.findViewById(R.id.fileicon);
+                checkBox = (CheckBox) itemView.findViewById(R.id.checkBox2);
+            } catch (NullPointerException shit) {
               shit.printStackTrace();
             }
 
@@ -107,6 +148,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
 
             itemView.setOnClickListener(this);
             imageView.setOnClickListener(this);
+
+            checkBox.setOnCheckedChangeListener(this);
         }
 
         @Override
@@ -123,45 +166,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
             }
             return  true;
         }
-    }
 
-
-    public interface ViewHolderClicks{
-         void onItemClicked(View v, int position);
-         void onItemLongClicked(View v, int adapterPosition);
-    }
-
-    public void clickListener( ViewHolderClicks viewHolderClicks){
-        this.viewHolderClicks= viewHolderClicks;
-    }
-
-    public String getFilePath(int position) {
-        return mFiles.get(position).getPath();
-    }
-
-    public void removeItem(int position){
-        mFiles.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, mFiles.size());
-    }
-
-    public void removeItem(File file) {
-            int position = mFiles.indexOf(file);
-            mFiles.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, mFiles.size());
-    }
-    public void addItem(File file){
-      mFiles.add(0,file);
-        notifyItemInserted(0);
-        notifyItemRangeChanged(0, mFiles.size());
-
-    }
-
-    public void updateDataSet(){
-        mFiles=mFileHandler.getFiles(FileHandler.getDirectory(mModeHandler.getMODE()));
-        Collections.sort(mFiles);
-        notifyDataSetChanged();
-        notifyItemRangeChanged(0,getItemCount());
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            viewClicks.itemChecked(buttonView, getAdapterPosition(), isChecked);
+        }
     }
 }

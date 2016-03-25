@@ -23,6 +23,8 @@ import java.util.Iterator;
 public class EncryptorAESService extends IntentService {
 
     private static final String TAG = "ENCRYPTOR_AES_SERVICE";
+    private static boolean failure;
+    private static int failure_count;
     private String mPassword;
     private ArrayList<String> mFilePaths;
     private String mKeyLen;
@@ -30,9 +32,6 @@ public class EncryptorAESService extends IntentService {
     private Boolean mDeleteFiles;
     private Crypto crypto;
     private String mAlgorithm;
-
-    private static boolean failure;
-    private static int failure_count;
 
     public EncryptorAESService() {
         super("EncryptorAESService");
@@ -77,8 +76,9 @@ public class EncryptorAESService extends IntentService {
                 lbm.sendBroadcast(broadcast);
 
                 try {
-                    success= crypto.encrypt(source_files[file], dest_files[file], mDeleteFiles);
-
+                    if (source_files[file].exists())
+                        success = crypto.encrypt(source_files[file], dest_files[file], mDeleteFiles);
+                    else count--;
                 } catch (Exception e) {
                     failure_count++;
                     dest_files[file].delete();
@@ -94,8 +94,9 @@ public class EncryptorAESService extends IntentService {
                 Log.d(TAG, "sending intent");
                 lbm.sendBroadcast(broadcast);
                 try {
-                    success= crypto.decrypt(source_files[file], dest_files[file], mDeleteFiles);
-
+                    if (source_files[file].exists())
+                        success = crypto.decrypt(source_files[file], dest_files[file], mDeleteFiles);
+                    else count--;
                 } catch (Exception e) {
                     failure_count++;
                     dest_files[file].delete();

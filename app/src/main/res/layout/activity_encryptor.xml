@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/encryptor_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/encryptor_layout"
     tools:context="com.burman.rohit.encryptor.Encryptor">
 
     <android.support.design.widget.AppBarLayout
@@ -22,7 +22,6 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:navigationIcon="@drawable/ic_keyboard_backspace_24dp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 />
 
@@ -32,8 +31,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
             app:tabGravity="fill"
+            app:tabMode="fixed"
            />
 
 </android.support.design.widget.AppBarLayout>
@@ -43,8 +42,8 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp"
         android:clipToPadding="false"
+        android:paddingTop="2dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
        />
 

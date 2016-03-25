@@ -23,16 +23,14 @@ import java.util.ArrayList;
  * Created by Rohit on 3/7/2016.
  */
 public  class DialogFrag extends DialogFragment {
-    private static final String TAG = "TAB_FRAGMENT";
+    private static final String TAG = "DIALOG_FRAG";
     private static String operation_mode;
     private static String tabMode;
     private static RVAdapter adapter;
     private static int itemPosition;
-
+    private static ArrayList<String> paths;
     private String key;
     private Boolean delete;
-    private ArrayList <String> paths;
-
     private TextInputLayout passwordInputLayout;
     private CheckBox checkBoxDelete;
 
@@ -45,6 +43,20 @@ public  class DialogFrag extends DialogFragment {
         Bundle args = new Bundle();
         args.putString("MODE", modeHandler);
         args.putInt("Position", position);
+        f.setArguments(args);
+        return f;
+    }
+
+    static DialogFrag newInstance(String opmode, ArrayList<String> path) {
+        Log.d(TAG, String.valueOf(path.size()));
+        DialogFrag f = new DialogFrag();
+        tabMode = ModeHandler.DEFAULT;
+        operation_mode = opmode;
+        paths = CheckList.getPaths();
+        Bundle args = new Bundle();
+
+        args.putString("MODE", tabMode);
+        args.putInt("Position", 0);
         f.setArguments(args);
         return f;
     }
@@ -85,15 +97,20 @@ public  class DialogFrag extends DialogFragment {
                 String pass = String.valueOf(passwordInputLayout.getEditText().getText());
                 if (pass.isEmpty()) {
 
+                } else if (tabMode.equals(ModeHandler.DEFAULT)) {
+                    delete = checkBoxDelete.isChecked();
+                    Log.d(TAG, "path list:" + paths.size() + " " + pass + " " + operation_mode + " " + key + " " + delete);
+                    ((Encryptor) getActivity()).startEncryptorService(CheckList.getPaths(), pass, operation_mode, key, delete);
+                    dialog.dismiss();
                 } else {
                     delete = checkBoxDelete.isChecked();
                     TabFragment tabFragment= ((TabFragment)ModeHandler.getTab(tabMode));
-                        Log.i(TAG,""+ModeHandler.tablist.toString());
-                        Log.i(TAG,"getting tab in mode "+tabMode+" "+ModeHandler.getTab(tabMode));
+                    Log.i(TAG, "" + ModeHandler.tablist.toString());
+                    Log.i(TAG, "getting tab in mode " + tabMode + " " + ModeHandler.getTab(tabMode));
                     adapter= tabFragment.getRVAdapter();
+                    paths.clear();
                     paths.add(adapter.getFilePath(itemPosition));
                     ((Encryptor) getActivity()).startEncryptorService(paths, pass, operation_mode, key, delete);
-                    dialog.dismiss();
                 }
             }
         });

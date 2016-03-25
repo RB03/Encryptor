@@ -41,4 +41,12 @@ public class FileUtils {
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
+
+    public static void deleteFiles(ArrayList<String> paths) {
+
+        for (String path : paths) {
+            File file = new File(path);
+            if (file.exists()) file.delete();
+        }
+    }
 }

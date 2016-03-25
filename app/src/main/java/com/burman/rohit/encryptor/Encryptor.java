@@ -4,26 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.nfc.Tag;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import android.support.v4.app.Fragment;
-import android.widget.ProgressBar;
+import android.view.View;
 
 import com.burman.rohit.encryptor.Service.EncryptorAESService;
 import com.burman.rohit.encryptor.utils.FileHandler;
@@ -40,13 +36,12 @@ public class Encryptor extends AppCompatActivity implements NewFileFragment.OnNe
     private static ViewPager viewPager;
     private static FloatingActionButton fab;
     private  static ProgressDialog progressBar;
-
+    private static CoordinatorLayout coordinatorLayout;
     private TabFragment tabFragmentEnc;
     private TabFragment tabFragmentDec;
     private TabFragment tabFragmentEnc1;
     private TabFragment tabFragmentDec2;
     private FragmentManager fragmentManager;
-    private static CoordinatorLayout coordinatorLayout;
     private StatusBroadcastReceiver statusBroadcastReceiver;
 
     @Override
@@ -159,6 +154,12 @@ public class Encryptor extends AppCompatActivity implements NewFileFragment.OnNe
     @Override
     public void createPassDialog(ModeHandler modeHandler, int position) {
      DialogFrag df= DialogFrag.newInstance(modeHandler.getMODE(), position);
+        df.show(getSupportFragmentManager(), "Password");
+    }
+
+    @Override
+    public void createPassDialog(String mode, ArrayList<String> paths) {
+        DialogFrag df = DialogFrag.newInstance(mode, paths);
         df.show(getSupportFragmentManager(), "Password");
     }
 

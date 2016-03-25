@@ -1,27 +1,19 @@
 package com.burman.rohit.encryptor;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.AvoidXfermode;
-import android.os.Build;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.burman.rohit.encryptor.utils.FileHandler;
@@ -37,16 +29,17 @@ public class TabFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "TAB_FRAGMENT";
+    private static TabInteraction tabInteraction;
+    private static ContextActionMode cam = new ContextActionMode();
+    private static ActionMode mActionMode;
+    public RVAdapter mRVAdapter;
     private String MODE;
     private int POSITION;
-
-    private TabInteraction tabInteraction;
     private ModeHandler mModeHandler;
     private FileHandler mFileHandler;
-    public RVAdapter mRVAdapter;
 
-    public interface TabInteraction{
-        void createPassDialog(ModeHandler modeHandler, int position);
+    public static TabInteraction getTabInteraction() {
+        return tabInteraction;
     }
 
     public static TabFragment newInstance(int position) {
@@ -80,6 +73,13 @@ public class TabFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+
+        Log.d(TAG, "Cam is alive: " + ContextActionMode.isAlive);
+        if (ContextActionMode.isAlive) {
+            mActionMode = getActivity()
+                    .startActionMode(ContextActionMode.getActionModeCallback());
+            CheckList.checkItems();
+        }
     }
 
     @Override
@@ -99,11 +99,10 @@ public class TabFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_card);
         recyclerView.setHasFixedSize(false);
-
         mRVAdapter = new RVAdapter(mModeHandler);
         recyclerView.setAdapter(mRVAdapter);
         recyclerView.setLayoutManager(layoutManager);
-
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         mRVAdapter.clickListener(new RVAdapter.ViewHolderClicks() {
             @Override
             public void onItemClicked(View v, final int position) {
@@ -136,7 +135,25 @@ public class TabFragment extends Fragment {
 
             @Override
             public void onItemLongClicked(View v, int adapterPosition) {
-                Snackbar.make(v, "Long Clicked " + (++adapterPosition), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(v, "Long Clicked " + (++adapterPosition), Snackbar.LENGTH_SHORT).
+                        show();
+            }
+
+            @Override
+            public void itemChecked(View v, int position, boolean isChecked) {
+                if (position >= 0) {
+                    ElementModal element = new ElementModal(position, mRVAdapter.getFilePath(position), mModeHandler.getMODE(), v);
+                    if (isChecked) {
+                        if (!ContextActionMode.isAlive) {
+                            mActionMode = getActivity()
+                                    .startActionMode(ContextActionMode.getActionModeCallback());
+                        }
+                        CheckList.addToCheckedList(element);
+                    } else {
+                        Log.d(TAG, "removing item from checklist");
+                        CheckList.removeFromCheckedList(element);
+                    }
+                }
             }
         });
 
@@ -177,15 +194,14 @@ public class TabFragment extends Fragment {
         return view;
     }
 
+    public String getMODE() {
+        return mModeHandler.getMODE();
+    }
 
     public void setMODE(ModeHandler modeHandler) {
         this.mModeHandler = modeHandler;
         MODE = modeHandler.getMODE();
         ModeHandler.registerTab(this, MODE);
-    }
-
-    public String getMODE() {
-        return mModeHandler.getMODE();
     }
 
     @Override
@@ -199,7 +215,6 @@ public class TabFragment extends Fragment {
         }
     }
 
-
     public RVAdapter getRVAdapter() {
         if(mRVAdapter!=null){
             return mRVAdapter;
@@ -207,6 +222,10 @@ public class TabFragment extends Fragment {
     }
 
 
+    public interface TabInteraction {
+        void createPassDialog(ModeHandler modeHandler, int position);
 
+        void createPassDialog(String mode, ArrayList<String> paths);
 
+    }
 }

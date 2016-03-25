@@ -12,10 +12,22 @@
     <RelativeLayout
         android:id="@+id/card_view_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="50dp"
+        android:layout_height="72dp"
         android:padding="12dp"
-       >
+        >
+
+        <TextView
+            android:id="@+id/filename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="60dp"
+            android:layout_toEndOf="@+id/fileicon"
+            android:layout_toLeftOf="@+id/unlock_icon"
+            android:layout_toRightOf="@+id/fileicon"
+            android:singleLine="true"
+            android:text="Tithgghhghhsggghghghgllllllllle"
+            android:textSize="18sp"/>
 
         <ImageView
             android:id="@+id/fileicon"
@@ -23,30 +35,31 @@
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/document_lock_128"/>
-
-        <TextView
-            android:id="@+id/filename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/fileicon"
-            android:paddingRight="30dp"
-            android:singleLine="true"
-            android:text="Tithgghhghhsggghghghgllllllllle"
-            android:textSize="22sp"/>
+            android:padding="4dp"
+            android:src="@drawable/document_lock_128"
+            />
 
         <ImageView
             android:id="@+id/unlock_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/checkBox2"
+            android:layout_toStartOf="@+id/checkBox2"
+            android:alpha="0.7"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="12dp"
+            android:src="@drawable/ic_lock_open_24dp"/>
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:alpha="0.7"
-            android:src="@drawable/ic_lock_open_24dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:paddingLeft="12dp"/>
+            android:gravity="center_vertical"/>
 
     </RelativeLayout>
 
