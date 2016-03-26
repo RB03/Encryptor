@@ -1,12 +1,22 @@
 package com.burman.rohit.encryptor;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.burman.rohit.encryptor.utils.FileUtils;
 import com.burman.rohit.encryptor.utils.ModeHandler;
+
+import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by Rohit on 3/21/2016.
@@ -21,10 +31,14 @@ public class ContextActionMode implements ActionMode.Callback {
     private static CheckList checklist;
     private static int decr;
     private static int encr;
+    private static Context context;
     TabFragment.TabInteraction tabInteraction;
     private Menu _menu;
 
-    public static ActionMode.Callback getActionModeCallback() {
+
+
+    public static ActionMode.Callback getActionModeCallback(Context context_param) {
+        context= context_param;
         return cam;
     }
 
@@ -64,8 +78,47 @@ public class ContextActionMode implements ActionMode.Callback {
                 tabInteraction.createPassDialog(ModeHandler.ENCRYPTOR, CheckList.getPaths());
                 break;
             case R.id.delete_menu:
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setTitle("Confirm Delete?");
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ArrayList<String> paths = CheckList.getPaths();
+                        FileUtils.deleteFiles(paths);
+                        RVAdapter rvAdapterEnc = ((TabFragment) ModeHandler.getTab(ModeHandler.ENCRYPTOR))
+                                .getRVAdapter();
+                        RVAdapter rvAdapterDec = ((TabFragment) ModeHandler.getTab(ModeHandler.DECRYPTOR))
+                                .getRVAdapter();
+                        rvAdapterDec.updateDataSet();
+                        rvAdapterEnc.updateDataSet();
+                    }
+                });
+                alert.show();
+
                 break;
             case R.id.share_menu:
+                ArrayList<String> file_paths_send=CheckList.getPaths();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Here are some files");
+                intent.setType("*/*");
+
+                ArrayList<Uri> files = new ArrayList<Uri>();
+
+                for(String path : file_paths_send) {
+                    File file = new File(path);
+                    Uri uri = Uri.fromFile(file);
+                    files.add(uri);
+                }
+
+                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                context.startActivity(intent);
                 break;
 
         }
@@ -81,11 +134,10 @@ public class ContextActionMode implements ActionMode.Callback {
         isAlive = false;
     }
 
-    public void itemAdded(String mode) {
+    public static void itemAdded(String mode) {
 
         if (mode.equals(ModeHandler.ENCRYPTOR)) encr++;
         else decr++;
-
         am.setTitle((encr + decr) + " " + "Selected");
 
 //        if (encr==0) setEncryptMenuVisibility(true);
@@ -104,7 +156,7 @@ public class ContextActionMode implements ActionMode.Callback {
         encrypt.setVisible(b);
     }
 
-    public void itemRemoved(String mode) {
+    public static void itemRemoved(String mode) {
         if (mode.equals(ModeHandler.ENCRYPTOR)) encr--;
         else decr--;
         am.setTitle((encr + decr) + " " + "Selected");
@@ -115,7 +167,6 @@ public class ContextActionMode implements ActionMode.Callback {
 //            setDecryptMenuVisibility(false);
 //        }
         Log.e("size ", String.valueOf(CheckList.size()) + " " + CheckList.isEmpty());
-
         if (CheckList.isEmpty()) {
             isAlive = false;
             am.finish();

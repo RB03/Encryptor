@@ -38,6 +38,7 @@ public class TabFragment extends Fragment {
     private ModeHandler mModeHandler;
     private FileHandler mFileHandler;
 
+
     public static TabInteraction getTabInteraction() {
         return tabInteraction;
     }
@@ -73,11 +74,10 @@ public class TabFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-
         Log.d(TAG, "Cam is alive: " + ContextActionMode.isAlive);
         if (ContextActionMode.isAlive) {
             mActionMode = getActivity()
-                    .startActionMode(ContextActionMode.getActionModeCallback());
+                    .startActionMode(ContextActionMode.getActionModeCallback(getContext()));
             CheckList.checkItems();
         }
     }
@@ -146,7 +146,8 @@ public class TabFragment extends Fragment {
                     if (isChecked) {
                         if (!ContextActionMode.isAlive) {
                             mActionMode = getActivity()
-                                    .startActionMode(ContextActionMode.getActionModeCallback());
+                                    .startActionMode(ContextActionMode.getActionModeCallback
+                                            (getActivity()));
                         }
                         CheckList.addToCheckedList(element);
                     } else {

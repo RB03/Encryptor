@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CheckList {
     private static ConcurrentHashMap<String, ElementModal> elementModals = new ConcurrentHashMap<>();
-    private static ContextActionMode contextActionMode = (ContextActionMode) ContextActionMode.getActionModeCallback();
     private static ArrayList<String> paths;
 
     public static ElementModal getElementModal(String path) {
@@ -30,12 +29,12 @@ public class CheckList {
 
     public static void addToCheckedList(ElementModal element) {
         elementModals.put(element.getPath(), element);
-        contextActionMode.itemAdded(element.getMode());
+        ContextActionMode.itemAdded(element.getMode());
     }
 
     public static void removeFromCheckedList(ElementModal element) {
         elementModals.remove(element.getPath());
-        contextActionMode.itemRemoved(element.getMode());
+        ContextActionMode.itemRemoved(element.getMode());
     }
 
     public static void clear() {

@@ -37,7 +37,6 @@ public class StatusBroadcastReceiver extends BroadcastReceiver {
                         .getRVAdapter();
                 RVAdapter rvAdapterDec = ((TabFragment) ModeHandler.getTab(ModeHandler.DECRYPTOR))
                         .getRVAdapter();
-
                 encryptor.dismissProgressBar();
                 rvAdapterDec.updateDataSet();
                 rvAdapterEnc.updateDataSet();
