@@ -68,7 +68,6 @@ public class Encryptor extends AppCompatActivity implements NewFileFragment.OnNe
                 NewFileFragment newFragment = NewFileFragment.newInstance(ModeHandler.DEFAULT, -1);
                 newFragment.show(fragmentManager, "Details");
 
-
             }
         });
 
@@ -122,12 +121,15 @@ public class Encryptor extends AppCompatActivity implements NewFileFragment.OnNe
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         tabFragmentEnc=new TabFragment();
         tabFragmentDec= new TabFragment();
+        FragmentTextCrypt tabfrag= FragmentTextCrypt.newInstance("","");
+
 //        tabFragmentEnc=TabFragment.newInstance(ENCRYPT_TAB);
 //        tabFragmentDec= TabFragment.newInstance(DECRYPT_TAB);
 ////
         tabFragmentDec.setMODE(new ModeHandler(ModeHandler.DECRYPTOR));
         tabFragmentEnc.setMODE(new ModeHandler(ModeHandler.ENCRYPTOR));
 
+        adapter.addFrag(tabfrag, "Text encryptor");
         adapter.addFrag(tabFragmentEnc, "Encrypted Files");
         adapter.addFrag(tabFragmentDec, "Decrypted Files");
         upViewPager.setAdapter(adapter);

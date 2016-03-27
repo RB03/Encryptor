@@ -122,10 +122,10 @@ public class NewFileFragment extends DialogFragment {
         pickButton = (Button) view.findViewById(R.id.pick_button);
         pathTextView = (TextView) view.findViewById(R.id.paths_text);
 
-        ArrayAdapter<CharSequence> mode=ArrayAdapter.createFromResource(getActivity(),R.array.spinner_mode_array,
-                android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<CharSequence> klen=ArrayAdapter.createFromResource(getActivity(),R.array
                         .spinner_keylength_array,
+                android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> mode=ArrayAdapter.createFromResource(getActivity(),R.array.spinner_mode_array,
                 android.R.layout.simple_spinner_dropdown_item);
         modeSpin.setAdapter(mode);
         keyLen.setAdapter(klen);
@@ -210,6 +210,7 @@ public class NewFileFragment extends DialogFragment {
 
 
     private boolean validateFields(String viewType) throws NullPointerException{
+
 
         switch (viewType){
             case ModeHandler.DEFAULT:
